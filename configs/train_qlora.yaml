@@ -1,0 +1,39 @@
+model_name: Qwen/Qwen2.5-7B
+output_dir: models/lora
+dataset_path: data/sft/train.jsonl
+hf_format: "chat_template"     # apply_chat_template for Qwen
+seed: 42
+
+quantization:
+  load_in_4bit: true
+  bnb_4bit_quant_type: "nf4"
+  bnb_4bit_use_double_quant: true
+  bnb_4bit_compute_dtype: "bfloat16"
+
+lora:
+  r: 16
+  alpha: 32
+  dropout: 0.05
+  target_modules:
+    - q_proj
+    - k_proj
+    - v_proj
+    - o_proj
+    - gate_proj
+    - up_proj
+    - down_proj
+
+train:
+  per_device_train_batch_size: 1
+  gradient_accumulation_steps: 64
+  num_train_epochs: 2
+  learning_rate: 2.0e-4
+  warmup_ratio: 0.03
+  lr_scheduler_type: cosine
+  logging_steps: 10
+  save_steps: 500
+  max_steps: -1
+  gradient_checkpointing: true
+  max_seq_length: 4096
+  packing: true
+

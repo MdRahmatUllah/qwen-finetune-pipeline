@@ -1,0 +1,9 @@
+pdf:
+  detect_tables: true
+  infer_footnotes: true
+  extract_code: true
+export:
+  markdown:
+    include_images: false
+    heading_normalization: true
+

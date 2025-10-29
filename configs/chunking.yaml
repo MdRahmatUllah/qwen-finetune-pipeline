@@ -1,0 +1,14 @@
+target_token_length: 800
+min_chunk: 400
+overlap: 120
+splitters:
+  - type: "markdown_header"
+  - type: "semantic_sentence"     # fall back to sentence splitter
+  - type: "length"
+metadata:
+  include:
+    - source
+    - title
+    - page_start
+    - page_end
+

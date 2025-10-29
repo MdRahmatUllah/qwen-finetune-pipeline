@@ -1,0 +1,129 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual environments
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+.venv/
+
+# PyCharm
+.idea/
+
+# VSCode
+.vscode/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+*.ipynb
+
+# Environment variables
+.env
+.env.local
+
+# Data directories (exclude all data files)
+data/raw_pdfs/*.pdf
+data/md/*.md
+data/cleaned/*.md
+data/chunks/*.jsonl
+data/sft/*.jsonl
+
+# Keep directory structure but ignore contents
+data/raw_pdfs/*
+!data/raw_pdfs/.gitkeep
+data/md/*
+!data/md/.gitkeep
+data/cleaned/*
+!data/cleaned/.gitkeep
+data/chunks/*
+!data/chunks/.gitkeep
+data/sft/*
+!data/sft/.gitkeep
+
+# Model files (these are large and should not be committed)
+models/base/*
+!models/base/.gitkeep
+models/lora/*
+!models/lora/.gitkeep
+models/merged/*
+!models/merged/.gitkeep
+models/gguf/*
+!models/gguf/.gitkeep
+
+# Training logs and checkpoints
+training/run_logs/*
+!training/run_logs/.gitkeep
+*.log
+*.pt
+*.pth
+*.bin
+*.safetensors
+*.gguf
+
+# llama.cpp (cloned during conversion)
+llama.cpp/
+
+# HuggingFace cache
+.cache/
+*.lock
+
+# OS-specific
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+
+# Weights & Biases
+wandb/
+
+# Accelerate config (may contain user-specific settings)
+# Uncomment if you don't want to share accelerate config
+# .accelerate/
+
+# TensorBoard logs
+runs/
+logs/
+
+# pytest
+.pytest_cache/
+.coverage
+htmlcov/
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Ruff
+.ruff_cache/
+
