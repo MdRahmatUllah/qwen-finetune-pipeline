@@ -50,7 +50,7 @@ echo "Converting to GGUF format (fp16)..."
 echo "This may take several minutes..."
 python "$LLAMA_CPP_DIR/convert_hf_to_gguf.py" \
     "$MERGED_DIR" \
-    --outfile "$GGUF_DIR/qwen2p5_7b_merged.gguf" \
+    --outfile "$GGUF_DIR/qwen2p5_7b_merged_2.gguf" \
     --outtype f16
 
 echo "✓ Conversion to fp16 GGUF complete"
@@ -82,8 +82,8 @@ fi
 
 if [ -n "$QUANTIZE_BIN" ]; then
     "$QUANTIZE_BIN" \
-        "$GGUF_DIR/qwen2p5_7b_merged.gguf" \
-        "$GGUF_DIR/qwen2p5_7b_merged.Q4_K_M.gguf" \
+        "$GGUF_DIR/qwen2p5_7b_merged_2.gguf" \
+        "$GGUF_DIR/qwen2p5_7b_merged_2.Q4_K_M.gguf" \
         Q4_K_M
     echo "✓ Quantization complete"
 fi

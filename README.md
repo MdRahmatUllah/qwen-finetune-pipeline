@@ -22,7 +22,7 @@ Complete end-to-end pipeline for fine-tuning **Qwen2.5-7B** on custom PDF docume
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/yourusername/qwen-finetune-pipeline.git
+git clone https://github.com/MdRahmatUllah/qwen-finetune-pipeline.git
 cd qwen-finetune-pipeline
 ```
 

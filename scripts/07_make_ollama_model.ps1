@@ -2,12 +2,12 @@
 #
 # Usage:
 #   powershell scripts/07_make_ollama_model.ps1
-#   powershell scripts/07_make_ollama_model.ps1 -ModelName qwen2p5-7b-sft
+#   powershell -File scripts\07_make_ollama_model.ps1
 
 param(
     [string]$ModelName = "qwen25-7b-sft",
     [string]$Modelfile = "ollama/Modelfile",
-    [string]$GgufFile = "models/gguf/qwen2p5_7b_merged.gguf"
+    [string]$GgufFile = "models/gguf/qwen2p5_7b_merged_2.gguf"
 )
 
 $ErrorActionPreference = "Stop"
@@ -30,7 +30,7 @@ if (-not (Test-Path $GgufFile)) {
     Write-Host "Error: GGUF file not found: $GgufFile" -ForegroundColor Red
     Write-Host ""
     Write-Host "Trying fallback to fp16 version..." -ForegroundColor Yellow
-    $GgufFile = "models/gguf/qwen2p5_7b_merged.gguf"
+    $GgufFile = "models/gguf/qwen2p5_7b_merged_2.gguf"
     
     if (-not (Test-Path $GgufFile)) {
         Write-Host "Error: No GGUF file found!" -ForegroundColor Red

@@ -10,7 +10,7 @@ set -euo pipefail
 # Configuration
 MODEL_NAME="${1:-qwen2p5-7b-sft}"
 MODELFILE="ollama/Modelfile"
-GGUF_FILE="models/gguf/qwen2p5_7b_merged.Q4_K_M.gguf"
+GGUF_FILE="models/gguf/qwen2p5_7b_merged_2.Q4_K_M.gguf"
 
 echo "=== Creating Ollama Model ==="
 echo ""
@@ -29,7 +29,7 @@ if [ ! -f "$GGUF_FILE" ]; then
     echo "Error: GGUF file not found: $GGUF_FILE"
     echo ""
     echo "Trying fallback to fp16 version..."
-    GGUF_FILE="models/gguf/qwen2p5_7b_merged.gguf"
+    GGUF_FILE="models/gguf/qwen2p5_7b_merged_2.gguf"
     
     if [ ! -f "$GGUF_FILE" ]; then
         echo "Error: No GGUF file found!"

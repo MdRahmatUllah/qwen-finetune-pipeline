@@ -3,6 +3,7 @@
 # Usage:
 #   powershell scripts/06_convert_to_gguf.ps1
 #   powershell scripts/06_convert_to_gguf.ps1 -MergedDir models/merged -GgufDir models/gguf
+#   powershell -File scripts\06_convert_to_gguf.ps1
 
 param(
     [string]$MergedDir = "models/merged",
@@ -51,7 +52,7 @@ Write-Host "This may take several minutes..." -ForegroundColor Yellow
 
 python "$LlamaCppDir/convert_hf_to_gguf.py" `
     $MergedDir `
-    --outfile "$GgufDir/qwen2p5_7b_merged.gguf" `
+    --outfile "$GgufDir/qwen2p5_7b_merged_2.gguf" `
     --outtype f16
 
 Write-Host "[OK] Conversion to fp16 GGUF complete" -ForegroundColor Green
@@ -75,8 +76,8 @@ if ($null -eq $QuantizeExe) {
     Write-Host "Skipping quantization step" -ForegroundColor Yellow
 } else {
     & $QuantizeExe `
-        "$GgufDir/qwen2p5_7b_merged.gguf" `
-        "$GgufDir/qwen2p5_7b_merged.Q4_K_M.gguf" `
+        "$GgufDir/qwen2p5_7b_merged_2.gguf" `
+        "$GgufDir/qwen2p5_7b_merged_2.Q4_K_M.gguf" `
         Q4_K_M
     Write-Host "[OK] Quantization complete" -ForegroundColor Green
 }
