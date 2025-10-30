@@ -4,6 +4,6 @@ pdf:
   extract_code: true
 export:
   markdown:
-    include_images: false
+    include_images: true
     heading_normalization: true
 

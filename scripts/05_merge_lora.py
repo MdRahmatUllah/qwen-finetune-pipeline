@@ -2,9 +2,13 @@
 """
 Merge LoRA adapters back into the base model to create a full HuggingFace model.
 
+The script automatically detects and uses the latest checkpoint if the adapter path
+contains checkpoint subdirectories (e.g., checkpoint-12, checkpoint-24).
+
 Usage:
     python scripts/05_merge_lora.py
     python scripts/05_merge_lora.py --base Qwen/Qwen2.5-7B --adapter models/lora --output models/merged
+    python scripts/05_merge_lora.py --adapter models/lora/checkpoint-12  # Use specific checkpoint
 """
 
 import typer
@@ -24,31 +28,56 @@ def main(
 ):
     """
     Merge LoRA adapters into base model and save as full model.
-    
+
     Args:
         base: Base model name or path (HuggingFace model ID)
-        adapter: Path to LoRA adapter directory
+        adapter: Path to LoRA adapter directory or checkpoint subdirectory.
+                 If the path contains checkpoint-* subdirectories, the latest one will be used.
         output: Output directory for merged model
     """
     console.print("[bold blue]Merging LoRA Adapters into Base Model[/bold blue]\n")
-    
+
     adapter_path = Path(adapter)
     output_path = Path(output)
-    
+
     # Check if adapter directory exists
     if not adapter_path.exists():
         console.print(f"[red]Error: Adapter directory '{adapter}' not found![/red]")
         console.print("[dim]Run 04_train_qlora.py first to train the model[/dim]")
         raise typer.Exit(1)
-    
-    # Check for adapter files
+
+    # Check for adapter files - handle checkpoint subdirectories
     adapter_config = adapter_path / "adapter_config.json"
+
     if not adapter_config.exists():
-        console.print(f"[red]Error: No adapter_config.json found in '{adapter}'![/red]")
-        console.print("[dim]The adapter directory may be incomplete or corrupted[/dim]")
-        raise typer.Exit(1)
-    
-    console.print(f"[green]✓ Found LoRA adapters in {adapter}[/green]")
+        # Look for checkpoint subdirectories
+        console.print(f"[yellow]No adapter_config.json in '{adapter}', checking for checkpoints...[/yellow]")
+
+        checkpoints = sorted(
+            [d for d in adapter_path.iterdir() if d.is_dir() and d.name.startswith("checkpoint-")],
+            key=lambda x: int(x.name.split("-")[-1]) if x.name.split("-")[-1].isdigit() else 0,
+            reverse=True  # Latest checkpoint first
+        )
+
+        if not checkpoints:
+            console.print(f"[red]Error: No adapter_config.json or checkpoint directories found in '{adapter}'![/red]")
+            console.print("[dim]The adapter directory may be incomplete or corrupted[/dim]")
+            console.print("[dim]Expected either:[/dim]")
+            console.print(f"[dim]  - {adapter}/adapter_config.json[/dim]")
+            console.print(f"[dim]  - {adapter}/checkpoint-*/adapter_config.json[/dim]")
+            raise typer.Exit(1)
+
+        # Use the latest checkpoint
+        adapter_path = checkpoints[0]
+        adapter_config = adapter_path / "adapter_config.json"
+
+        if not adapter_config.exists():
+            console.print(f"[red]Error: No adapter_config.json found in checkpoint '{adapter_path.name}'![/red]")
+            raise typer.Exit(1)
+
+        console.print(f"[green]✓ Found checkpoint: {adapter_path.name}[/green]")
+
+    console.print(f"[green]✓ Found LoRA adapters in {adapter_path}[/green]")
     
     # Create output directory
     output_path.mkdir(parents=True, exist_ok=True)

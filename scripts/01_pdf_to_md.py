@@ -11,11 +11,13 @@ import pathlib
 import json
 import yaml
 import typer
+import torch
 from rich.console import Console
 from rich.progress import track
 from docling.document_converter import DocumentConverter, PdfFormatOption
 from docling.datamodel.pipeline_options import PdfPipelineOptions
 from docling.datamodel.base_models import InputFormat
+from docling.datamodel.accelerator_options import AcceleratorDevice, AcceleratorOptions
 
 console = Console()
 
@@ -54,11 +56,33 @@ def main(
         return
     
     console.print(f"[green]Found {len(pdf_files)} PDF file(s) to process[/green]")
-    
+
     # Initialize Docling converter
     try:
+        # Detect and configure GPU acceleration
+        device = AcceleratorDevice.CPU
+        device_name = "CPU"
+
+        # Check for CUDA GPU availability
+        if torch.cuda.is_available():
+            device = AcceleratorDevice.CUDA
+            device_name = f"CUDA (GPU: {torch.cuda.get_device_name(0)})"
+            console.print(f"[green]✓ GPU acceleration enabled: {device_name}[/green]")
+        else:
+            console.print(f"[yellow]⚠ GPU not available, using CPU[/yellow]")
+            console.print(f"[dim]  To enable GPU: Install PyTorch with CUDA support[/dim]")
+
+        # Configure accelerator options
+        # Use more threads for CPU, fewer for GPU (GPU handles parallelism internally)
+        num_threads = 4 if device == AcceleratorDevice.CUDA else 8
+        accelerator_options = AcceleratorOptions(
+            num_threads=num_threads,
+            device=device
+        )
+
         # Create pipeline options from configuration
         pipeline_options = PdfPipelineOptions()
+        pipeline_options.accelerator_options = accelerator_options
 
         # Load and apply configuration if available
         if conf_path.exists():
@@ -88,6 +112,8 @@ def main(
                 InputFormat.PDF: PdfFormatOption(pipeline_options=pipeline_options)
             }
         )
+
+        console.print(f"[dim]Accelerator: {device_name} ({num_threads} threads)[/dim]")
     except Exception as e:
         console.print(f"[red]Error initializing Docling: {e}[/red]")
         raise typer.Exit(1)

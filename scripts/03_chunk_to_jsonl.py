@@ -33,7 +33,7 @@ def sentence_split(text: str) -> list[str]:
     return [s.strip() for s in sentences if s.strip()]
 
 
-def chunk_text(text: str, target: int = 800, overlap: int = 120, min_chunk: int = 80) -> list[str]:
+def chunk_text(text: str, target: int = 500, overlap: int = 100, min_chunk: int = 50) -> list[str]:
     """
     Chunk text into overlapping segments based on word count.
     
@@ -84,7 +84,7 @@ def create_sft_example(chunk: str, source_file: str) -> dict:
         Dictionary with conversations and metadata
     """
     # Truncate chunk to reasonable length (4000 chars)
-    truncated_chunk = chunk[:4000]
+    truncated_chunk = chunk
     
     # Create conversation format for SFT
     example = {
@@ -114,9 +114,9 @@ def create_sft_example(chunk: str, source_file: str) -> dict:
 def main(
     src: str = "data/cleaned",
     outdir: str = "data/sft",
-    target_words: int = 800,
-    overlap_words: int = 120,
-    min_words: int = 80
+    target_words: int = 500,
+    overlap_words: int = 100,
+    min_words: int = 50
 ):
     """
     Chunk cleaned Markdown files and create SFT training dataset in JSONL format.
